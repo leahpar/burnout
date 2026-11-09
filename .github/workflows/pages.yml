@@ -23,6 +23,14 @@ jobs:
       url: ${{ steps.deploiement.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      # Version affichée dans l'appli (commit et date du build) et nom du cache du service worker
+      - name: Version du build
+        run: |
+          commit=$(git rev-parse --short HEAD)
+          date=$(TZ=Europe/Paris date '+%d/%m/%Y %H:%M')
+          printf "export const VERSION = { commit: '%s', date: '%s' };\n" "$commit" "$date" > app/js/version.js
+          sed -i "s/^const VERSION = 'dev';/const VERSION = '$commit';/" app/sw.js
+          grep -q "const VERSION = '$commit';" app/sw.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: app

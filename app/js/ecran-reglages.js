@@ -28,10 +28,9 @@ export function initialiserReglages({ surModeDeveloppeur }) {
             const nom = element('input', { value: vehicule.nom, required: true });
             const note = element('input', { value: vehicule.note });
             const supprimer = element('button', { type: 'button', className: 'bouton-danger', textContent: 'Supprimer' });
-            const formulaire = element('form', { className: 'pile carte' },
+            const formulaire = element('form', { className: 'pile' },
                 element('label', { className: 'champ' }, 'Nom ', nom),
                 element('label', { className: 'champ' }, 'Note ', note),
-                element('p', { className: 'discret', textContent: `${nbSessions} session${nbSessions > 1 ? 's' : ''}` }),
                 element('div', { className: 'boutons' },
                     element('button', { type: 'submit', textContent: 'Enregistrer' }),
                     supprimer),
@@ -55,7 +54,14 @@ export function initialiserReglages({ surModeDeveloppeur }) {
                 }
                 await afficherVehicules();
             });
-            return element('li', {}, formulaire);
+            // Fiche repliée : nom, note et nombre de sessions ; « Modifier » ouvre le formulaire
+            return element('li', {}, element('details', { className: 'carte vehicule' },
+                element('summary', {},
+                    element('span', { className: 'vehicule-resume' },
+                        element('strong', { textContent: vehicule.nom }),
+                        element('span', { className: 'discret', textContent: [vehicule.note, `${nbSessions} session${nbSessions > 1 ? 's' : ''}`].filter(Boolean).join(' · ') })),
+                    element('span', { className: 'modifier', textContent: 'Modifier' })),
+                formulaire));
         }));
     }
 

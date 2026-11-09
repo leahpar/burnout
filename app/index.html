@@ -12,9 +12,21 @@
     <script type="module" src="js/app.js"></script>
 </head>
 <body>
-    <header class="barre-connexion">
-        <span id="etat-connexion" class="etat" data-etat="deconnecte">Déconnecté</span>
-        <button id="bouton-connexion" type="button">Connecter</button>
+    <header class="barre-etat">
+        <div class="ligne-etat">
+            <button id="etat-gps" type="button" class="etat-gps" aria-expanded="false" aria-controls="etat-detail">
+                <span id="pastille" class="pastille" data-qualite="rouge"></span>
+                <span id="etat-texte">Déconnecté</span>
+            </button>
+            <button id="bouton-connecter" type="button" class="bouton-connecter">Connecter</button>
+        </div>
+        <div id="etat-detail" class="etat-detail" hidden>
+            <dl class="etat-valeurs">
+                <div><dt>HDOP</dt><dd id="hdop">—</dd></div>
+                <div><dt>Altitude</dt><dd id="altitude">—</dd></div>
+            </dl>
+            <button id="bouton-deconnecter" type="button" class="bouton-danger" hidden>Déconnecter</button>
+        </div>
     </header>
     <p id="message-compatibilite" class="alerte" hidden>
         Ce navigateur ne prend pas en charge Web Bluetooth. Utilisez Chrome sur Android.
@@ -25,6 +37,7 @@
             <option value="1">×1</option>
             <option value="4">×4</option>
         </select>
+        <small id="version-dev" class="discret"></small>
     </div>
     <div id="bandeau-simulation" class="bandeau-simulation" hidden>
         <span id="texte-simulation">Simulation</span>
@@ -34,41 +47,20 @@
     <main>
         <section id="ecran-direct" class="ecran">
             <div class="vitesse"><span id="vitesse">—</span><small>km/h</small></div>
-            <dl class="etat-gps">
-                <div><dt>Fix</dt><dd id="fix" class="sans-fix">Pas de fix</dd></div>
-                <div><dt>Satellites</dt><dd id="satellites">—</dd></div>
-                <div><dt>HDOP</dt><dd id="hdop">—</dd></div>
-                <div><dt>Fréquence</dt><dd id="frequence">—</dd></div>
-                <div><dt>Altitude</dt><dd id="altitude">—</dd></div>
-            </dl>
-            <button id="bouton-performance" type="button" class="bouton-large">Mode performance</button>
-        </section>
-        <section id="ecran-performance" class="ecran" hidden>
-            <div id="perf-preparation" class="pile">
-                <label id="perf-choix-vehicule" class="champ">Véhicule
-                    <select id="perf-vehicule"></select>
-                </label>
-                <form id="perf-nouveau-vehicule" class="pile" hidden>
-                    <p>Aucun véhicule : créez-en un pour démarrer.</p>
-                    <label class="champ">Nom du véhicule <input id="perf-nom-vehicule" required></label>
-                    <button type="submit">Créer le véhicule</button>
-                </form>
-                <button id="perf-demarrer" type="button" class="bouton-large">Démarrer</button>
+            <div id="session-en-cours" class="pile" hidden>
+                <p class="enregistrement">Enregistrement en cours</p>
+                <ol id="evenements" class="evenements"></ol>
             </div>
-            <div id="perf-session" class="pile" hidden>
-                <div class="perf-entete">
-                    <span id="perf-indicateur" class="indicateur" data-etat="attente">Attente</span>
-                    <span class="perf-vitesse"><span id="perf-vitesse">—</span> <small>km/h</small></span>
-                </div>
-                <p id="perf-resultat" class="resultat">—</p>
-                <ol id="perf-evenements" class="evenements"></ol>
-                <button id="perf-arreter" type="button" class="bouton-large bouton-danger">Arrêter</button>
-            </div>
-            <form id="perf-fin" class="pile" hidden>
-                <p id="perf-bilan"></p>
-                <label class="champ">Note (facultative) <textarea id="perf-note" rows="3"></textarea></label>
-                <button type="submit" class="bouton-large">Terminer</button>
+            <p id="bilan" class="discret bilan" hidden></p>
+            <form id="nouveau-vehicule" class="pile" hidden>
+                <p>Aucun véhicule : créez-en un pour démarrer.</p>
+                <label class="champ">Nom du véhicule <input id="nom-vehicule" required></label>
+                <button type="submit">Créer le véhicule</button>
             </form>
+            <div id="commandes-session" class="commandes-session">
+                <select id="vehicule" aria-label="Véhicule"></select>
+                <button id="bouton-session" type="button" class="bouton-large">Démarrer</button>
+            </div>
         </section>
 
         <section id="ecran-historique" class="ecran" hidden>
@@ -120,12 +112,12 @@
             <dl id="reg-seuils" class="seuils"></dl>
             <h2>Mode développeur</h2>
             <label class="case"><input id="reg-dev" type="checkbox"> Activer le mode développeur</label>
+            <p id="version" class="discret version"></p>
         </section>
     </main>
 
     <nav class="onglets">
         <button type="button" data-ecran="direct" aria-current="page">Direct</button>
-        <button type="button" data-ecran="performance">Performance</button>
         <button type="button" data-ecran="historique">Historique</button>
         <button type="button" data-ecran="reglages">Réglages</button>
     </nav>

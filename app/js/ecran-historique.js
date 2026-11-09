@@ -18,8 +18,9 @@ const COULEURS = {
     intervalleDouteux: 'rgba(255, 65, 54, 0.2)',
 };
 
-// source : SourcePoints, pour la relecture ; surRelecture() est appelée quand une relecture démarre
-export function initialiserHistorique({ source, surRelecture }) {
+// source : SourcePoints, pour la relecture ; sessionEnCours() donne l'id de la session en cours
+// d'enregistrement (absente de la liste) ; surRelecture() est appelée quand une relecture démarre
+export function initialiserHistorique({ source, sessionEnCours, surRelecture }) {
     let vehicules = new Map();
     let sessionAffichee = null;
     let courbe = null;
@@ -36,7 +37,8 @@ export function initialiserHistorique({ source, surRelecture }) {
         vehicules = new Map(liste.map((v) => [v.id, v]));
         remplirVehicules($('hist-filtre'), liste, $('hist-filtre').value, { value: '', textContent: 'Tous' });
 
-        const sessions = await stockage.listerSessions($('hist-filtre').value || null);
+        const sessions = (await stockage.listerSessions($('hist-filtre').value || null))
+            .filter((resume) => resume.id !== sessionEnCours());
         $('hist-vide').hidden = sessions.length > 0;
         $('hist-liste').replaceChildren(...sessions.map((resume) => {
             const meilleur = resume.meilleur0100;
@@ -143,5 +145,13 @@ export function initialiserHistorique({ source, surRelecture }) {
         await afficherListe();
     });
 
-    return { afficher: afficherListe };
+    return {
+        afficher: afficherListe,
+        // Bouton retour d'Android : ferme le détail s'il est ouvert (renvoie false sinon)
+        fermerDetail() {
+            if (!sessionAffichee) return false;
+            afficherListe();
+            return true;
+        },
+    };
 }

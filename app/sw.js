@@ -1,6 +1,7 @@
-// Service worker : tout en cache, cache d'abord. Incrémenter VERSION à chaque livraison.
+// Service worker : tout en cache, cache d'abord. VERSION est remplacée par le commit dans le workflow
+// GitHub Pages : chaque livraison a son propre cache.
 
-const VERSION = 3;
+const VERSION = 'dev';
 const CACHE = `burnout-v${VERSION}`;
 const FICHIERS = [
     './',
@@ -18,7 +19,8 @@ const FICHIERS = [
     'js/stockage.js',
     'js/format.js',
     'js/dom.js',
-    'js/ecran-performance.js',
+    'js/version.js',
+    'js/ecran-direct.js',
     'js/ecran-historique.js',
     'js/ecran-reglages.js',
     'vendor/idb-keyval.js',

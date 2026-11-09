@@ -1,8 +1,9 @@
-// Écran Réglages : véhicules, seuils de détection (lecture seule), mode développeur
+// Écran Réglages : véhicules, export et import, seuils de détection (lecture seule), mode développeur
 
 import { SEUILS } from './detection.js';
 import * as stockage from './stockage.js';
-import { $, element } from './dom.js';
+import { creerExport, lireFichier, nomFichier } from './echange.js';
+import { $, element, telechargerJson } from './dom.js';
 
 const CLE_MODE_DEVELOPPEUR = 'burnout.modeDeveloppeur';
 
@@ -65,6 +66,35 @@ export function initialiserReglages({ surModeDeveloppeur }) {
         await stockage.creerVehicule(nom, $('reg-note').value.trim());
         $('reg-nom').value = '';
         $('reg-note').value = '';
+        await afficherVehicules();
+    });
+
+    $('reg-exporter').addEventListener('click', async () => {
+        const sessions = await stockage.lireToutesSessions();
+        if (!sessions.length) {
+            alert('Aucune session à exporter.');
+            return;
+        }
+        telechargerJson(nomFichier(), creerExport(sessions, await stockage.listerVehicules()));
+    });
+
+    $('reg-importer').addEventListener('click', () => $('reg-fichier').click());
+    $('reg-fichier').addEventListener('change', async () => {
+        const [fichier] = $('reg-fichier').files;
+        $('reg-fichier').value = '';
+        if (!fichier) return;
+        try {
+            const bilan = await stockage.importer(lireFichier(await fichier.text()));
+            const s = (n) => (n > 1 ? 's' : '');
+            const compte = (n, nom, qualificatif) => `${n} ${nom}${s(n)} ${qualificatif}${s(n)}`;
+            alert([
+                compte(bilan.sessions, 'session', 'importée'),
+                bilan.dejaPresentes && compte(bilan.dejaPresentes, 'session', 'déjà présente'),
+                bilan.vehicules && compte(bilan.vehicules, 'véhicule', 'ajouté'),
+            ].filter(Boolean).join(', ') + '.');
+        } catch (erreur) {
+            alert(`Import impossible : ${erreur.message}.`);
+        }
         await afficherVehicules();
     });
 

@@ -90,6 +90,14 @@
                     <label class="champ">Note <textarea id="hist-note" rows="3"></textarea></label>
                     <button type="submit">Enregistrer la note</button>
                 </form>
+                <div id="hist-relecture" class="boutons" hidden>
+                    <button id="hist-rejouer" type="button">Rejouer la session</button>
+                    <select id="hist-facteur" aria-label="Facteur d'accélération">
+                        <option value="1">×1</option>
+                        <option value="4">×4</option>
+                    </select>
+                </div>
+                <button id="hist-exporter" type="button">Exporter la session</button>
                 <button id="hist-supprimer" type="button" class="bouton-danger">Supprimer la session</button>
             </div>
         </section>
@@ -102,6 +110,12 @@
                 <label class="champ">Note (facultative) <input id="reg-note"></label>
                 <button type="submit">Ajouter le véhicule</button>
             </form>
+            <h2>Données</h2>
+            <div class="pile">
+                <button id="reg-exporter" type="button">Exporter tout l'historique</button>
+                <button id="reg-importer" type="button">Importer un fichier</button>
+                <input id="reg-fichier" type="file" accept=".json,application/json" hidden>
+            </div>
             <h2>Seuils de détection</h2>
             <dl id="reg-seuils" class="seuils"></dl>
             <h2>Mode développeur</h2>

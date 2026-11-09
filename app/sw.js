@@ -1,6 +1,6 @@
 // Service worker : tout en cache, cache d'abord. Incrémenter VERSION à chaque livraison.
 
-const VERSION = 2;
+const VERSION = 3;
 const CACHE = `burnout-v${VERSION}`;
 const FICHIERS = [
     './',
@@ -14,6 +14,7 @@ const FICHIERS = [
     'js/generateur.js',
     'js/source.js',
     'js/session.js',
+    'js/echange.js',
     'js/stockage.js',
     'js/format.js',
     'js/dom.js',

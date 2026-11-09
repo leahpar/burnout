@@ -6,6 +6,7 @@
 
 import { createStore, get, set, del, update } from '../vendor/idb-keyval.js';
 import { resumerSession, trierSessions } from './session.js';
+import { fusionner } from './echange.js';
 
 const base = createStore('burnout', 'donnees');
 const cleSession = (id) => `session:${id}`;
@@ -22,6 +23,11 @@ export async function enregistrerSession(session) {
     await set(cleSession(session.id), session, base);
     const resume = resumerSession(session);
     await update('sessions', (liste = []) => [...liste.filter((r) => r.id !== session.id), resume], base);
+}
+
+// Sessions complètes, de la plus récente à la plus ancienne (pour l'export de tout l'historique)
+export async function lireToutesSessions() {
+    return Promise.all((await listerSessions()).map((r) => lireSession(r.id)));
 }
 
 export async function supprimerSession(id) {
@@ -54,5 +60,14 @@ export async function supprimerVehicule(id) {
     if ((await lireDernierVehicule()) === id) await del('dernierVehicule', base);
 }
 
-export const lireDernierVehicule = () => get('dernierVehicule', base);
+// Import d'un fichier lu par lireFichier (echange.js) : fusion par identifiant, sans rien écraser
+export async function importer(fichier) {
+    const [vehicules, sessions] = await Promise.all([listerVehicules(), listerSessions()]);
+    const ajouts = fusionner(fichier, { vehicules: vehicules.map((v) => v.id), sessions: sessions.map((s) => s.id) });
+    for (const vehicule of ajouts.vehicules) await enregistrerVehicule(vehicule);
+    for (const session of ajouts.sessions) await enregistrerSession(session);
+    return { vehicules: ajouts.vehicules.length, sessions: ajouts.sessions.length, dejaPresentes: ajouts.dejaPresentes };
+}
+
+export const lireDernierVehicule =() => get('dernierVehicule', base);
 export const memoriserDernierVehicule = (id) => set('dernierVehicule', id, base);

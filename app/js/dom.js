@@ -10,6 +10,13 @@ export function element(balise, proprietes = {}, ...enfants) {
     return noeud;
 }
 
+// Fait télécharger un objet sous forme de fichier JSON
+export function telechargerJson(nom, objet) {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(objet)], { type: 'application/json' }));
+    element('a', { href: url, download: nom }).click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 // Remplit une liste déroulante de véhicules ; premiere : option initiale facultative { value, textContent }
 export function remplirVehicules(select, vehicules, selection, premiere = null) {
     select.replaceChildren(

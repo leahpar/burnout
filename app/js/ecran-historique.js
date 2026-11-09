@@ -1,9 +1,12 @@
-// Écran Historique : liste des sessions filtrable par véhicule, détail avec évènements, courbe et note
+// Écran Historique : liste des sessions filtrable par véhicule, détail avec évènements, courbe, note,
+// export et relecture (mode développeur)
 
 import uPlot from '../vendor/uPlot.esm.js';
 import { donneesCourbe } from './session.js';
 import * as stockage from './stockage.js';
-import { $, element, remplirVehicules } from './dom.js';
+import { creerExport, nomFichier } from './echange.js';
+import { modeDeveloppeur } from './ecran-reglages.js';
+import { $, element, remplirVehicules, telechargerJson } from './dom.js';
 import { formaterDate, formaterDuree, formaterComplement } from './format.js';
 
 const HAUTEUR_COURBE = 260;
@@ -15,7 +18,8 @@ const COULEURS = {
     intervalleDouteux: 'rgba(255, 65, 54, 0.2)',
 };
 
-export function initialiserHistorique() {
+// source : SourcePoints, pour la relecture ; surRelecture() est appelée quand une relecture démarre
+export function initialiserHistorique({ source, surRelecture }) {
     let vehicules = new Map();
     let sessionAffichee = null;
     let courbe = null;
@@ -60,6 +64,7 @@ export function initialiserHistorique() {
         $('hist-detail').hidden = false;
         $('hist-titre').textContent = `${formaterDate(session.debut)} · ${nomVehicule(session.vehiculeId)}`;
         $('hist-note').value = session.note;
+        $('hist-relecture').hidden = !modeDeveloppeur();
 
         $('hist-sans-evenement').hidden = session.evenements.length > 0;
         $('hist-evenements').replaceChildren(...session.evenements.map((evenement) => element('tr',
@@ -118,6 +123,17 @@ export function initialiserHistorique() {
     });
     $('hist-note').addEventListener('input', () => {
         $('hist-note-form').querySelector('button').textContent = 'Enregistrer la note';
+    });
+
+    $('hist-exporter').addEventListener('click', () => {
+        if (!sessionAffichee) return;
+        telechargerJson(nomFichier(sessionAffichee), creerExport([sessionAffichee], [...vehicules.values()]));
+    });
+
+    $('hist-rejouer').addEventListener('click', () => {
+        if (!sessionAffichee) return;
+        source.rejouer(sessionAffichee.points, Number($('hist-facteur').value));
+        surRelecture();
     });
 
     $('hist-supprimer').addEventListener('click', async () => {

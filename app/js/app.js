@@ -20,7 +20,8 @@ const source = new SourcePoints(ble);
 
 const ecrans = {
     performance: initialiserPerformance(source),
-    historique: initialiserHistorique(),
+    // Relecture d'une session : on bascule sur l'écran Performance pour voir la détection
+    historique: initialiserHistorique({ source, surRelecture: () => afficherEcran('performance') }),
     reglages: initialiserReglages({ surModeDeveloppeur: afficherBarreDev }),
 };
 
@@ -66,7 +67,7 @@ ble.addEventListener('etat', (e) => {
     if (etat === 'deconnecte' && !source.simulation) afficherPoint(null);
 });
 
-// Simulation (mode développeur) : un lancer généré, rejoué comme s'il venait du boîtier
+// Simulation et relecture (mode développeur) : points rejoués comme s'ils venaient du boîtier
 function afficherBarreDev() {
     $('barre-dev').hidden = !modeDeveloppeur() || source.simulation !== null;
     $('bandeau-simulation').hidden = source.simulation === null;
@@ -76,7 +77,7 @@ $('bouton-simuler').addEventListener('click', () => source.simuler(Number($('fac
 $('arreter-simulation').addEventListener('click', () => source.arreterSimulation());
 
 source.addEventListener('simulation', (e) => {
-    $('texte-simulation').textContent = `Simulation ×${e.detail ?? 1}`;
+    if (e.detail) $('texte-simulation').textContent = `${e.detail.libelle} ×${e.detail.facteur}`;
     afficherBarreDev();
     if (e.detail === null && ble.etat === 'deconnecte') afficherPoint(null);
 });

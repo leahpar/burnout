@@ -7,6 +7,7 @@
     <title>burnout</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icones/icone.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="vendor/uPlot.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script type="module" src="js/app.js"></script>
 </head>
@@ -18,6 +19,17 @@
     <p id="message-compatibilite" class="alerte" hidden>
         Ce navigateur ne prend pas en charge Web Bluetooth. Utilisez Chrome sur Android.
     </p>
+    <div id="barre-dev" class="barre-dev" hidden>
+        <button id="bouton-simuler" type="button">Simuler un lancer</button>
+        <select id="facteur-simulation" aria-label="Facteur d'accélération">
+            <option value="1">×1</option>
+            <option value="4">×4</option>
+        </select>
+    </div>
+    <div id="bandeau-simulation" class="bandeau-simulation" hidden>
+        <span id="texte-simulation">Simulation</span>
+        <button id="arreter-simulation" type="button">Arrêter</button>
+    </div>
 
     <main>
         <section id="ecran-direct" class="ecran">
@@ -31,9 +43,70 @@
             </dl>
             <button id="bouton-performance" type="button" class="bouton-large">Mode performance</button>
         </section>
-        <section id="ecran-performance" class="ecran" hidden><p class="a-venir">À venir</p></section>
-        <section id="ecran-historique" class="ecran" hidden><p class="a-venir">À venir</p></section>
-        <section id="ecran-reglages" class="ecran" hidden><p class="a-venir">À venir</p></section>
+        <section id="ecran-performance" class="ecran" hidden>
+            <div id="perf-preparation" class="pile">
+                <label id="perf-choix-vehicule" class="champ">Véhicule
+                    <select id="perf-vehicule"></select>
+                </label>
+                <form id="perf-nouveau-vehicule" class="pile" hidden>
+                    <p>Aucun véhicule : créez-en un pour démarrer.</p>
+                    <label class="champ">Nom du véhicule <input id="perf-nom-vehicule" required></label>
+                    <button type="submit">Créer le véhicule</button>
+                </form>
+                <button id="perf-demarrer" type="button" class="bouton-large">Démarrer</button>
+            </div>
+            <div id="perf-session" class="pile" hidden>
+                <div class="perf-entete">
+                    <span id="perf-indicateur" class="indicateur" data-etat="attente">Attente</span>
+                    <span class="perf-vitesse"><span id="perf-vitesse">—</span> <small>km/h</small></span>
+                </div>
+                <p id="perf-resultat" class="resultat">—</p>
+                <ol id="perf-evenements" class="evenements"></ol>
+                <button id="perf-arreter" type="button" class="bouton-large bouton-danger">Arrêter</button>
+            </div>
+            <form id="perf-fin" class="pile" hidden>
+                <p id="perf-bilan"></p>
+                <label class="champ">Note (facultative) <textarea id="perf-note" rows="3"></textarea></label>
+                <button type="submit" class="bouton-large">Terminer</button>
+            </form>
+        </section>
+
+        <section id="ecran-historique" class="ecran" hidden>
+            <div id="hist-liste-vue" class="pile">
+                <label class="champ">Véhicule <select id="hist-filtre"></select></label>
+                <ul id="hist-liste" class="liste"></ul>
+                <p id="hist-vide" class="discret" hidden>Aucune session</p>
+            </div>
+            <div id="hist-detail" class="pile" hidden>
+                <button id="hist-retour" type="button">← Retour</button>
+                <h2 id="hist-titre"></h2>
+                <div id="hist-courbe" class="courbe"></div>
+                <table class="tableau">
+                    <thead><tr><th>Évènement</th><th>Temps</th><th>Détail</th></tr></thead>
+                    <tbody id="hist-evenements"></tbody>
+                </table>
+                <p id="hist-sans-evenement" class="discret" hidden>Aucun évènement</p>
+                <form id="hist-note-form" class="pile">
+                    <label class="champ">Note <textarea id="hist-note" rows="3"></textarea></label>
+                    <button type="submit">Enregistrer la note</button>
+                </form>
+                <button id="hist-supprimer" type="button" class="bouton-danger">Supprimer la session</button>
+            </div>
+        </section>
+
+        <section id="ecran-reglages" class="ecran" hidden>
+            <h2>Véhicules</h2>
+            <ul id="reg-vehicules" class="liste"></ul>
+            <form id="reg-ajout" class="pile carte">
+                <label class="champ">Nom <input id="reg-nom" required></label>
+                <label class="champ">Note (facultative) <input id="reg-note"></label>
+                <button type="submit">Ajouter le véhicule</button>
+            </form>
+            <h2>Seuils de détection</h2>
+            <dl id="reg-seuils" class="seuils"></dl>
+            <h2>Mode développeur</h2>
+            <label class="case"><input id="reg-dev" type="checkbox"> Activer le mode développeur</label>
+        </section>
     </main>
 
     <nav class="onglets">

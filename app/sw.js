@@ -1,6 +1,6 @@
 // Service worker : tout en cache, cache d'abord. Incrémenter VERSION à chaque livraison.
 
-const VERSION = 1;
+const VERSION = 2;
 const CACHE = `burnout-v${VERSION}`;
 const FICHIERS = [
     './',
@@ -10,6 +10,19 @@ const FICHIERS = [
     'js/app.js',
     'js/ble.js',
     'js/trame.js',
+    'js/detection.js',
+    'js/generateur.js',
+    'js/source.js',
+    'js/session.js',
+    'js/stockage.js',
+    'js/format.js',
+    'js/dom.js',
+    'js/ecran-performance.js',
+    'js/ecran-historique.js',
+    'js/ecran-reglages.js',
+    'vendor/idb-keyval.js',
+    'vendor/uPlot.esm.js',
+    'vendor/uPlot.min.css',
     'icones/icone.svg',
     'icones/icone-192.png',
     'icones/icone-512.png',

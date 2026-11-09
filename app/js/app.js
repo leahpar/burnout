@@ -1,6 +1,11 @@
-// Interface : navigation, écran Direct, Wake Lock, service worker
+// Interface : navigation, écran Direct, simulation, Wake Lock, service worker
 
 import { ConnexionBle, bleDisponible } from './ble.js';
+import { SourcePoints } from './source.js';
+import { initialiserPerformance } from './ecran-performance.js';
+import { initialiserHistorique } from './ecran-historique.js';
+import { initialiserReglages, modeDeveloppeur } from './ecran-reglages.js';
+import { $ } from './dom.js';
 
 const FENETRE_FREQUENCE_MS = 2000;
 const LIBELLES_ETAT = {
@@ -10,8 +15,14 @@ const LIBELLES_ETAT = {
     reconnexion: 'Reconnexion…',
 };
 
-const $ = (id) => document.getElementById(id);
 const ble = new ConnexionBle();
+const source = new SourcePoints(ble);
+
+const ecrans = {
+    performance: initialiserPerformance(source),
+    historique: initialiserHistorique(),
+    reglages: initialiserReglages({ surModeDeveloppeur: afficherBarreDev }),
+};
 
 // Navigation
 function afficherEcran(nom) {
@@ -20,6 +31,7 @@ function afficherEcran(nom) {
         if (bouton.dataset.ecran === nom) bouton.setAttribute('aria-current', 'page');
         else bouton.removeAttribute('aria-current');
     }
+    ecrans[nom]?.afficher();
 }
 
 for (const bouton of document.querySelectorAll('.onglets button')) {
@@ -51,8 +63,24 @@ ble.addEventListener('etat', (e) => {
     $('etat-connexion').dataset.etat = etat;
     $('etat-connexion').textContent = LIBELLES_ETAT[etat];
     $('bouton-connexion').textContent = etat === 'deconnecte' ? 'Connecter' : 'Déconnecter';
-    if (etat === 'deconnecte') afficherPoint(null);
+    if (etat === 'deconnecte' && !source.simulation) afficherPoint(null);
 });
+
+// Simulation (mode développeur) : un lancer généré, rejoué comme s'il venait du boîtier
+function afficherBarreDev() {
+    $('barre-dev').hidden = !modeDeveloppeur() || source.simulation !== null;
+    $('bandeau-simulation').hidden = source.simulation === null;
+}
+
+$('bouton-simuler').addEventListener('click', () => source.simuler(Number($('facteur-simulation').value)));
+$('arreter-simulation').addEventListener('click', () => source.arreterSimulation());
+
+source.addEventListener('simulation', (e) => {
+    $('texte-simulation').textContent = `Simulation ×${e.detail ?? 1}`;
+    afficherBarreDev();
+    if (e.detail === null && ble.etat === 'deconnecte') afficherPoint(null);
+});
+afficherBarreDev();
 
 // Écran Direct
 const receptions = [];
@@ -64,7 +92,8 @@ function frequence() {
 }
 
 function afficherFrequence() {
-    $('frequence').textContent = ble.etat === 'deconnecte' ? '—' : `${frequence().toFixed(1)} Hz`;
+    const actif = ble.etat !== 'deconnecte' || source.simulation;
+    $('frequence').textContent = actif ? `${frequence().toFixed(1)} Hz` : '—';
 }
 
 function afficherPoint(point) {
@@ -78,7 +107,7 @@ function afficherPoint(point) {
     afficherFrequence();
 }
 
-ble.addEventListener('point', (e) => {
+source.addEventListener('point', (e) => {
     receptions.push(performance.now());
     afficherPoint(e.detail);
 });

@@ -102,7 +102,128 @@ main { flex: 1; overflow-y: auto; }
 
 .bouton-large { width: 100%; padding: 18px; font-size: 22px; border-color: var(--accent); }
 
-.a-venir { margin: auto; font-size: 28px; color: var(--discret); }
+/* Formulaires et listes */
+
+h2 { margin: 8px 0 0; font-size: 20px; color: var(--discret); }
+
+input, select, textarea {
+    font: inherit;
+    color: var(--texte);
+    background: var(--surface);
+    border: 2px solid var(--discret);
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    user-select: text;
+}
+
+button:disabled { opacity: 0.4; }
+
+.pile { display: flex; flex-direction: column; gap: 16px; }
+.pile[hidden] { display: none; }
+.champ { display: flex; flex-direction: column; gap: 6px; color: var(--discret); }
+.champ[hidden] { display: none; }
+.case { display: flex; align-items: center; gap: 12px; }
+.case input { width: 28px; height: 28px; }
+.carte { padding: 12px; background: var(--surface); border-radius: 12px; }
+.carte input { background: var(--fond); }
+.boutons { display: flex; gap: 12px; }
+.boutons button { flex: 1; }
+.discret { margin: 0; color: var(--discret); }
+.liste { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.bouton-danger { border-color: var(--alerte); color: var(--alerte); }
+.douteux { color: var(--attente); }
+
+/* Mode développeur et simulation */
+
+.barre-dev, .bandeau-simulation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 16px;
+}
+
+.barre-dev[hidden], .bandeau-simulation[hidden] { display: none; }
+.barre-dev select { width: auto; }
+.bandeau-simulation { background: var(--attente); color: #000; font-size: 22px; font-weight: bold; text-transform: uppercase; }
+.bandeau-simulation button { color: #000; background: none; border-color: #000; }
+
+/* Performance */
+
+.perf-entete { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+.indicateur {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    background: var(--surface);
+}
+
+.indicateur[data-etat="attente"] { color: var(--discret); }
+.indicateur[data-etat="pret"] { background: var(--ok); color: #000; }
+.indicateur[data-etat="en-cours"] { background: var(--accent); color: #000; }
+.indicateur[data-etat="abandon"] { background: var(--alerte); }
+
+.perf-vitesse { font-size: 56px; font-weight: bold; font-variant-numeric: tabular-nums; }
+.perf-vitesse small { font-size: 24px; color: var(--discret); }
+
+.resultat {
+    margin: 0;
+    font-size: min(12vw, 72px);
+    font-weight: bold;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.evenements { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+.evenements li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    font-size: 24px;
+    font-variant-numeric: tabular-nums;
+}
+
+.evenements .complement { color: var(--discret); font-size: 18px; }
+.evenements li.douteux { border-left: 6px solid var(--attente); }
+
+.mention-douteux {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--attente);
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#perf-session { flex: 1; }
+#perf-arreter { margin-top: auto; }
+
+/* Historique */
+
+.session { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: 100%; text-align: left; }
+.session-date { font-weight: bold; }
+.courbe { min-height: 260px; }
+.courbe .uplot { width: 100%; }
+
+.tableau { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tableau th, .tableau td { padding: 8px; text-align: left; border-bottom: 1px solid var(--surface); }
+.tableau th { color: var(--discret); font-weight: normal; }
+
+/* Réglages */
+
+.seuils { display: flex; flex-direction: column; gap: 8px; margin: 0; }
+.seuils div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; background: var(--surface); border-radius: 8px; }
+.seuils dt { color: var(--discret); }
+.seuils dd { margin: 0; text-align: right; }
 
 .onglets {
     display: grid;

@@ -1,0 +1,14 @@
+# Notes de travail (spécification, journal) : locales, non versionnées
+/notes/
+
+# Réglages locaux Claude Code
+/.claude/settings.local.json
+
+# PlatformIO (venv Python et dossier de PlatformIO locaux au projet)
+firmware/.pio/
+/.venv/
+/.platformio/
+
+# Éditeurs
+.idea/
+.vscode/

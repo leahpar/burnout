@@ -9,11 +9,11 @@ const CLE_MODE_DEVELOPPEUR = 'burnout.modeDeveloppeur';
 
 const nombre = (valeur) => valeur.toLocaleString('fr-FR');
 const LIBELLES_SEUILS = {
-    arret: ['Seuil d\'arrêt et de départ', (v) => `${nombre(v)} km/h`],
-    dureeArret: ['Durée d\'arrêt pour être prêt', (v) => `${nombre(v / 1000)} s`],
-    marge: ['Marge d\'abandon', (v) => `${nombre(v)} km/h`],
-    stagnation: ['Stagnation provoquant l\'abandon', (v) => `${nombre(v / 1000)} s sans gagner 1 km/h`],
-    trou: ['Trou de données rendant douteux', (v) => `> ${nombre(v)} ms`],
+    arret: ['Seuil d\'arrêt et de départ', (v) => `${nombre(v)}\u00a0km/h`],
+    dureeArret: ['Durée d\'arrêt pour être prêt', (v) => `${nombre(v / 1000)}\u00a0s`],
+    marge: ['Marge d\'abandon', (v) => `${nombre(v)}\u00a0km/h`],
+    stagnation: ['Stagnation provoquant l\'abandon', (v) => `${nombre(v / 1000)}\u00a0s sans gagner 1\u00a0km/h`],
+    trou: ['Trou de données rendant douteux', (v) => `>\u00a0${nombre(v)}\u00a0ms`],
     hdop: ['HDOP rendant douteux', (v) => `> ${nombre(v)}`],
 };
 

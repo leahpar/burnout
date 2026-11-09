@@ -5,7 +5,7 @@ import { Detecteur } from './detection.js';
 import { creerSession } from './session.js';
 import * as stockage from './stockage.js';
 import { $, element, remplirVehicules } from './dom.js';
-import { formaterResultat, formaterComplement } from './format.js';
+import { formaterDuree, formaterComplement } from './format.js';
 
 const INTERVALLE_ENREGISTREMENT_MS = 5000;
 
@@ -30,8 +30,8 @@ export function initialiserDirect(source, { surSession }) {
 
     function afficherCommandes() {
         $('vehicule').disabled = session !== null;
-        $('bouton-session').textContent = session ? 'Arrêter'
-            : gpsDisponible ? 'Démarrer' : 'Démarrer (pas de GPS)';
+        $('bouton-session').replaceChildren(session ? 'Arrêter' : 'Démarrer',
+            ...(session || gpsDisponible ? [] : [element('small', { textContent: 'pas de GPS' })]));
         $('bouton-session').classList.toggle('bouton-danger', session !== null);
         $('session-en-cours').hidden = session === null;
         $('ecran-direct').classList.toggle('en-session', session !== null);
@@ -108,13 +108,13 @@ export function initialiserDirect(source, { surSession }) {
         }
     });
 
-    // Du plus récent au plus ancien ; le premier est mis en avant par la feuille de style
+    // Tableau du plus récent au plus ancien, mêmes colonnes que dans l'Historique
     function afficherEvenements() {
-        $('evenements').replaceChildren(...session.evenements.toReversed().map((evenement) => element('li',
+        $('evenements').replaceChildren(...session.evenements.toReversed().map((evenement) => element('tr',
             { className: evenement.douteux ? 'douteux' : '' },
-            element('span', { className: 'resultat-ligne', textContent: formaterResultat(evenement) }),
-            element('span', { className: 'complement', textContent: formaterComplement(evenement) }),
-            ...(evenement.douteux ? [element('span', { className: 'mention-douteux', textContent: 'douteux' })] : []),
+            element('td', { textContent: evenement.nom }),
+            element('td', { textContent: formaterDuree(evenement.duree) }),
+            element('td', { textContent: [formaterComplement(evenement), evenement.douteux ? 'douteux' : ''].filter(Boolean).join(' · ') }),
         )));
     }
 

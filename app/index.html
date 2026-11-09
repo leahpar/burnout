@@ -49,7 +49,10 @@
             <div class="vitesse"><span id="vitesse">—</span><small>km/h</small></div>
             <div id="session-en-cours" class="pile" hidden>
                 <p class="enregistrement">Enregistrement en cours</p>
-                <ol id="evenements" class="evenements"></ol>
+                <table class="tableau evenements">
+                    <thead><tr><th>Évènement</th><th>Temps</th><th>Détail</th></tr></thead>
+                    <tbody id="evenements"></tbody>
+                </table>
             </div>
             <p id="bilan" class="discret bilan" hidden></p>
             <form id="nouveau-vehicule" class="pile" hidden>

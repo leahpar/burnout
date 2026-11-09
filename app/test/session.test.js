@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { creerSession, meilleurEvenement, resumerSession, trierSessions, tempsContinus, donneesCourbe } from '../js/session.js';
 import { detecter } from '../js/detection.js';
 import { genererLancer } from '../js/generateur.js';
-import { formaterDuree, formaterResultat, formaterComplement, formaterDistance, formaterVitesse } from '../js/format.js';
+import { formaterDuree, formaterComplement, formaterDistance, formaterVitesse } from '../js/format.js';
 
 test('création d\'une session : modèle attendu', () => {
     const session = creerSession('v1', new Date('2026-11-09T10:00:00Z'));
@@ -74,12 +74,11 @@ test('données de la courbe : temps depuis le début, trous sans fix, intervalle
 });
 
 test('mise en forme : deux décimales et virgule, km/h, m', () => {
-    assert.equal(formaterDuree(7.8412), '7,84 s');
-    assert.equal(formaterDuree(12), '12,00 s');
-    assert.equal(formaterVitesse(152.6), '153 km/h');
-    assert.equal(formaterDistance(48.2), '48 m');
-    assert.equal(formaterResultat({ nom: '0-100', duree: 7.84 }), '0-100 : 7,84 s');
-    assert.equal(formaterComplement({ nom: '100-0', duree: 3, distance: 48.2 }), '48 m');
-    assert.equal(formaterComplement({ nom: '0-400 m', duree: 15, vitesse: 151.7 }), 'sortie à 152 km/h');
+    assert.equal(formaterDuree(7.8412), '7,84\u00a0s');
+    assert.equal(formaterDuree(12), '12,00\u00a0s');
+    assert.equal(formaterVitesse(152.6), '153\u00a0km/h');
+    assert.equal(formaterDistance(48.2), '48\u00a0m');
+    assert.equal(formaterComplement({ nom: '100-0', duree: 3, distance: 48.2 }), '48\u00a0m');
+    assert.equal(formaterComplement({ nom: '0-400 m', duree: 15, vitesse: 151.7 }), '152\u00a0km/h');
     assert.equal(formaterComplement({ nom: '0-50', duree: 3 }), '');
 });

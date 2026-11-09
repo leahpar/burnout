@@ -116,7 +116,8 @@ source.addEventListener('simulation', (e) => {
 });
 afficherBarreDev();
 
-// Ligne d'état : qualité, satellites et fréquence ; HDOP et altitude dans le détail
+// Ligne d'état : qualité et satellites ; HDOP et altitude dans le détail. La fréquence n'est pas affichée
+// (toujours 5 Hz), mais une baisse rend la pastille orange : des points se perdent.
 const receptions = [];
 let dernierPoint = null;
 
@@ -140,9 +141,9 @@ function afficherEtat() {
     $('pastille').dataset.qualite = niveau;
     $('etat-texte').textContent = !actif ? LIBELLES_ETAT[ble.etat]
         : !point ? 'Aucune donnée'
-        : `${point.fix ? '' : 'Pas de fix · '}${point.satellites} sat · ${hz.toFixed(1).replace('.', ',')} Hz`;
+        : `${point.fix ? '' : 'Pas de fix · '}${point.satellites}\u00a0sat`;
     $('hdop').textContent = point?.hdop != null ? point.hdop.toFixed(1).replace('.', ',') : '—';
-    $('altitude').textContent = point?.fix ? `${point.altitude} m` : '—';
+    $('altitude').textContent = point?.fix ? `${point.altitude}\u00a0m` : '—';
     if (!point?.fix) direct.effacerVitesse();
     direct.signalerGps(niveau !== 'rouge');
 }

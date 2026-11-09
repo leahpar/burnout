@@ -199,8 +199,23 @@ void loop() {
     static int visibles = 0;
     static int snrMax = 0;
 
+    static char ligne[100];
+    static int longueur = 0;
+
     while (gpsSerial.available()) {
-        gps.encode(gpsSerial.read());
+        char c = gpsSerial.read();
+        gps.encode(c);
+
+        // Recopie brute des trames GSV sur la console : signal de chaque satellite (champs 4 à 7 :
+        // numéro, élévation, azimut, rapport signal/bruit en dBHz, vide si le satellite n'est pas suivi)
+        if (c == '$') longueur = 0;
+        if (longueur < (int)sizeof(ligne) - 1) ligne[longueur++] = c;
+        if (c == '\n') {
+            ligne[longueur] = 0;
+            if (strncmp(ligne, "$GPGSV", 6) == 0) Serial.print(ligne);
+            longueur = 0;
+        }
+
         if (rmcStatut.isUpdated()) {
             rmcStatut.value();  // remet isUpdated à faux
             trames++;

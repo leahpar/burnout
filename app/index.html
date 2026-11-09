@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>burnout</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icones/icone.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/app.js"></script>
+</head>
+<body>
+    <header class="barre-connexion">
+        <span id="etat-connexion" class="etat" data-etat="deconnecte">Déconnecté</span>
+        <button id="bouton-connexion" type="button">Connecter</button>
+    </header>
+    <p id="message-compatibilite" class="alerte" hidden>
+        Ce navigateur ne prend pas en charge Web Bluetooth. Utilisez Chrome sur Android.
+    </p>
+
+    <main>
+        <section id="ecran-direct" class="ecran">
+            <div class="vitesse"><span id="vitesse">—</span><small>km/h</small></div>
+            <dl class="etat-gps">
+                <div><dt>Fix</dt><dd id="fix" class="sans-fix">Pas de fix</dd></div>
+                <div><dt>Satellites</dt><dd id="satellites">—</dd></div>
+                <div><dt>HDOP</dt><dd id="hdop">—</dd></div>
+                <div><dt>Fréquence</dt><dd id="frequence">—</dd></div>
+                <div><dt>Altitude</dt><dd id="altitude">—</dd></div>
+            </dl>
+            <button id="bouton-performance" type="button" class="bouton-large">Mode performance</button>
+        </section>
+        <section id="ecran-performance" class="ecran" hidden><p class="a-venir">À venir</p></section>
+        <section id="ecran-historique" class="ecran" hidden><p class="a-venir">À venir</p></section>
+        <section id="ecran-reglages" class="ecran" hidden><p class="a-venir">À venir</p></section>
+    </main>
+
+    <nav class="onglets">
+        <button type="button" data-ecran="direct" aria-current="page">Direct</button>
+        <button type="button" data-ecran="performance">Performance</button>
+        <button type="button" data-ecran="historique">Historique</button>
+        <button type="button" data-ecran="reglages">Réglages</button>
+    </nav>
+</body>
+</html>

@@ -28,6 +28,28 @@ Projet pour le fun : simplicité avant tout.
 
 ## Utilisation
 
-L'application nécessite Chrome sur Android (Web Bluetooth).
+L'application est publiée sur <https://leahpar.github.io/burnout/>. Elle nécessite Chrome sur Android
+(Web Bluetooth).
 
-*À compléter au fil de l'implémentation.*
+1. Brancher le boîtier : la LED clignote lentement sans fix GPS, reste allumée avec un fix.
+2. Ouvrir l'URL dans Chrome, puis menu ⋮ → « Ajouter à l'écran d'accueil » (ou « Installer
+   l'application ») : l'appli s'ouvre alors en plein écran et fonctionne sans réseau.
+3. Appuyer sur « Connecter » et choisir `burnout`. Il faut le refaire à chaque ouverture de l'appli ;
+   après une coupure, la reconnexion est automatique.
+
+L'écran reste allumé tant que l'appli est au premier plan.
+
+## Développement
+
+Tests de l'appli (Node intégré, sans dépendance) :
+
+```sh
+node --test app/test/*.test.js
+```
+
+Pour essayer l'appli en local : `python3 -m http.server -d app 8000`, puis <http://localhost:8000>
+(Web Bluetooth et le service worker exigent HTTPS ou `localhost`).
+
+Le dossier `app/` est publié sur GitHub Pages par GitHub Actions (`.github/workflows/pages.yml`) à
+chaque push sur `main`. Incrémenter `VERSION` dans `app/sw.js` à chaque livraison, sinon les
+téléphones gardent l'ancienne version en cache.

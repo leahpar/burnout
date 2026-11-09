@@ -1,0 +1,124 @@
+:root {
+    --fond: #000;
+    --surface: #1a1a1a;
+    --texte: #fff;
+    --discret: #9a9a9a;
+    --accent: #ff6a00;
+    --ok: #2ecc40;
+    --alerte: #ff4136;
+    --attente: #ffdc00;
+    color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: var(--fond);
+    color: var(--texte);
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+button {
+    font: inherit;
+    color: var(--texte);
+    background: var(--surface);
+    border: 2px solid var(--discret);
+    border-radius: 12px;
+    padding: 12px 20px;
+}
+
+button:active { background: #333; }
+
+.barre-connexion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    background: var(--surface);
+}
+
+.etat { font-weight: bold; }
+.etat::before { content: "● "; }
+.etat[data-etat="deconnecte"] { color: var(--alerte); }
+.etat[data-etat="connexion"], .etat[data-etat="reconnexion"] { color: var(--attente); }
+.etat[data-etat="connecte"] { color: var(--ok); }
+
+.alerte {
+    margin: 0;
+    padding: 12px 16px;
+    background: var(--alerte);
+    font-weight: bold;
+}
+
+main { flex: 1; overflow-y: auto; }
+
+.ecran {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100%;
+    padding: 16px;
+}
+
+.ecran[hidden] { display: none; }
+
+.vitesse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto 0;
+    line-height: 1;
+}
+
+#vitesse {
+    font-size: min(42vw, 40vh);
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+}
+
+.vitesse small { font-size: 32px; color: var(--discret); }
+
+.etat-gps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 8px;
+    margin: 0;
+}
+
+.etat-gps div { padding: 8px; background: var(--surface); border-radius: 8px; text-align: center; }
+.etat-gps dt { font-size: 14px; color: var(--discret); }
+.etat-gps dd { margin: 4px 0 0; font-size: 22px; font-weight: bold; font-variant-numeric: tabular-nums; }
+.etat-gps .avec-fix { color: var(--ok); }
+.etat-gps .sans-fix { color: var(--alerte); }
+
+.bouton-large { width: 100%; padding: 18px; font-size: 22px; border-color: var(--accent); }
+
+.a-venir { margin: auto; font-size: 28px; color: var(--discret); }
+
+.onglets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--surface);
+}
+
+.onglets button {
+    padding: 16px 4px;
+    font-size: 15px;
+    border: none;
+    border-top: 3px solid transparent;
+    border-radius: 0;
+    background: none;
+    color: var(--discret);
+}
+
+.onglets button[aria-current="page"] { color: var(--texte); border-top-color: var(--accent); }
